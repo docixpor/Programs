@@ -25,9 +25,11 @@ public class Main {
                 int firstRoman = i + 1;
                 return firstRoman;
             }
-        } return 0;
+        }
+        return 0;
     }
-    public static String romanToArabian (int result) {
+
+    public static String romanToArabian(int result) {
 
         String[] roman = {
                 "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
@@ -44,81 +46,72 @@ public class Main {
 
         return roman[result - 1];
     }
+
     public static int Calculator(int a, String operation, int b) {
 
         int result = 0;
 
         switch (operation) {
 
-            case "-": result = a - b;
+            case "-":
+                result = a - b;
                 break;
-            case "+": result = a + b;
+            case "+":
+                result = a + b;
                 break;
-            case "*": result = a * b;
+            case "*":
+                result = a * b;
                 break;
-            case "/": result = a / b;
+            case "/":
+                result = a / b;
                 break;
             default:
-                try {
-                    throw new IOException();
-                } catch (IOException e) {
-                    System.out.println("Такой операции нет.");
-                }
-        } return result;
+                throw new NumberFormatException("Такой операции нет.");
+        }
+        return result;
     }
 
-    public static void main(String[] args) {
+    public static String calc(String input) {
 
-        System.out.println("Введите два числа (арабских или римских) и между ними операцию в формате: X - I или 10 - 1");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
         String[] parts = input.split(" ");
 
+        String result = null;
         String first = parts[0];
         String operation = parts[1];
         String second = parts[2];
 
-        try {
-            if (isRoman(first) != 0 && isRoman(second) == 0 || isRoman(first) == 0 && isRoman(second) != 0) {
-                throw new IOException();
-            }
-        } catch (IOException e) {
-            System.out.println("Вы ввели арабские цифры вместе с римскими.");
-        }
-
-        if (isRoman(first) > 10 || isRoman(second) > 10) {
-            try {
-                throw new IOException();
-            } catch (IOException e) {
-                System.out.println("Вы ввели римскую цифру превышающую значение 10.");
-            }
+        if (isRoman(first) != 0 && isRoman(second) == 0 || isRoman(first) == 0 && isRoman(second) != 0) {
+            throw new NumberFormatException("Вы ввели арабские цифры вместе с римскими.");
+        } else if (isRoman(first) > 10 || isRoman(second) > 10) {
+            throw new NumberFormatException("Вы ввели римскую цифру превышающую значение 10.");
         } else if (isRoman(first) != 0 && isRoman(second) != 0) {
-                if (isRoman(first) - isRoman(second) < 0) {
-                    try {
-                        throw new IOException();
-                    } catch (IOException e) {
-                        System.out.println("Результатом работы калькулятора с римскими числами могут быть только положительные числа");
-                    }
-                } else System.out.println(romanToArabian(Calculator(isRoman(first), operation, isRoman(second))));
+            if (isRoman(first) - isRoman(second) < 0) {
+                throw new NumberFormatException("Результатом работы калькулятора с римскими числами могут быть только положительные числа");
+            } else result = (romanToArabian(Calculator(isRoman(first), operation, isRoman(second))));
         } else if (isRoman(first) == 0 && isRoman(second) == 0) {
 
             int a = Integer.parseInt(first);
             int b = Integer.parseInt(second);
 
             if (a > 10 || b > 10) {
-                try {
-                    throw new IOException();
-                } catch (IOException e) {
-                    System.out.println("Введено число больше 10.");
-                }
-            } else if (parts.length > 2) {
-                try {
-                    throw new IOException();
-                }
-                catch (IOException e) {
-                    System.out.println("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *).");
-                }
-            } else System.out.println(Calculator(a, operation, b));
+                throw new NumberFormatException("Введено число больше 10.");
+            } else if (parts.length != 3) {
+                throw new NumberFormatException("Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *).");
+            } else result = Integer.toString(Calculator(a, operation, b));
+        }
+        if (result == null) {
+            throw new NumberFormatException("Ошибка");
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        while (true) {
+            System.out.println("Введите два числа (арабских или римских) и между ними операцию в формате: X - I или 10 - 1");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            System.out.println(calc(input));
         }
     }
 }
