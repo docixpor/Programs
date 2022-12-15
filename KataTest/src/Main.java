@@ -43,8 +43,9 @@ public class Main {
                 "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
         };
-
-        return roman[result - 1];
+        if (result < 0) {
+            throw new RuntimeException("Результатом работы калькулятора с римскими числами могут быть только положительные числа.");
+        } else return roman[result - 1];
     }
 
     public static int Calculator(int a, String operation, int b) {
@@ -81,13 +82,11 @@ public class Main {
         String second = parts[2];
 
         if (isRoman(first) != 0 && isRoman(second) == 0 || isRoman(first) == 0 && isRoman(second) != 0) {
-            throw new NumberFormatException("Вы ввели арабские цифры вместе с римскими.");
+            throw new NumberFormatException("Вы ввели арабские цифры вместе с римскими. Либо некоректные арабские цифры.");
         } else if (isRoman(first) > 10 || isRoman(second) > 10) {
             throw new NumberFormatException("Вы ввели римскую цифру превышающую значение 10.");
         } else if (isRoman(first) != 0 && isRoman(second) != 0) {
-            if (isRoman(first) - isRoman(second) < 0) {
-                throw new NumberFormatException("Результатом работы калькулятора с римскими числами могут быть только положительные числа");
-            } else result = (romanToArabian(Calculator(isRoman(first), operation, isRoman(second))));
+            result = (romanToArabian(Calculator(isRoman(first), operation, isRoman(second))));
         } else if (isRoman(first) == 0 && isRoman(second) == 0) {
 
             int a = Integer.parseInt(first);
